@@ -1,0 +1,180 @@
+import React from 'react';
+import axios from 'axios';
+import md5 from 'md5';
+import {v4 as uuidv4} from 'uuid';
+import styled from 'styled-components';
+
+/* Estilos */
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min(50%, 70rem);
+  background-color: #000000;
+`;
+
+const Input = styled.input`
+  padding: .5rem;
+  margin-bottom: 1.5rem;
+  background-color: #000000;
+  border: none;
+  border-bottom: .3rem solid goldenrod;
+  color: white;
+
+  &::selection {
+    background-color: green;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: dodgerblue;
+  }
+`;
+
+const SubmitInput = styled(Input)`
+  background-color: goldenrod;
+  width: 30rem;
+  margin: 2rem auto;
+  border: .5rem groove goldenrod;
+
+  &:focus {
+    outline: none;
+    border-color: transparent;
+  }
+`;
+
+
+/* Componentes */
+class LoginRegister extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      firstName: '',
+      secondName: '',
+      lastName: '',
+      user: '',
+      password: ''
+    }
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  handleSubmit = event => { 
+    event.preventDefault();
+    const keys = Object.keys(this.state);
+    const resetedState = {};
+   
+    
+    if (this.alreadyUserExist()) {
+      alert("Este usuario está en uso")
+    } else {
+      this.registerUser();
+    }
+
+    /* Nota: no pudemos usar event.target.reset porque es un formaulario controlado */
+    keys.forEach(key => resetedState[key] = '');
+    this.setState(resetedState);
+  }
+
+  alreadyUserExist = async ()  => {
+    return false;
+  }
+
+  registerUser = async () => {
+    const URL_HEROKU = 'https://block-master-api.herokuapp.com/users';
+    axios.post(URL_HEROKU, {
+      firstName: this.state.firstName,
+      secondName: this.state.secondName,
+      lastName: this.state.lastName,
+      user: this.state.user,
+      password: md5(this.state.password),
+      id: uuidv4()
+    });
+
+    return true;
+  }
+
+  render () {
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <Input
+          name="firstName"
+          value={this.state.firstName}
+          onChange={this.handleChange}
+          placeholder="Primer Nombre"
+          autoComplete="off"
+          required
+        />
+
+        <Input
+          name="secondName"
+          value={this.state.secondName}
+          onChange={this.handleChange}
+          placeholder="Segundo Nombre"
+          autoComplete="off"
+        />
+
+        <Input
+          name="lastName"
+          value={this.state.lastName}
+          onChange={this.handleChange}
+          placeholder="Apellidos"
+          autoComplete="off"
+          required
+        />
+
+        <Input
+          type="email"
+          name="user"
+          value={this.state.user}
+          onChange={this.handleChange}
+          placeholder="Email"
+          autoComplete="off"
+          required
+        />
+
+        <Input
+          type="password"
+          name="password"
+          value={this.state.password}
+          onChange={this.handleChange}
+          placeholder="Password"
+          autoComplete="off"
+          required
+        />
+
+        <SubmitInput
+          type="submit"
+          value="Registrarse"
+        />
+      </Form>
+    )
+  }
+}
+
+export default LoginRegister;
+
+/*TODO: 
+  ! implementar boton de ver password:
+    this.state = {
+      clearPassword: false
+    }
+
+    changeClearPassword = () => {
+      this.setState(state => { clearPassword: !clearPassword });
+    }
+
+    render ...
+      <input
+        type= ${this.state.clearPassword ? "text" : "password"}
+        value.....
+      />
+
+      <button onClick={this.changeClearPassword} >
+
+  *
+*/
