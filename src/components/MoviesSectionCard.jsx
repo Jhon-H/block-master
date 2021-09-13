@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import Modal from 'react-bootstrap/Modal';
+import Prewiew from '../components/Prewiew'
+import '../index.css';
 
 /* Estilos */
 const Card = styled.div`
@@ -9,10 +11,9 @@ const Card = styled.div`
   height: 33rem;
   background-image: url(${props => props.bgImg});
   background-size: contain;
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
   padding-top: 2rem;
-  margin-right: 1.2rem;
-  margin-left: 1.2rem;
+  margin: 2rem 2rem 0;
 `;
 
 const Score = styled.p`
@@ -32,16 +33,54 @@ const Start = styled.i`
   margin-right: .8rem;
 `;
 
+const ModalS = styled(Modal)`
+  background-color: #000000;
+  width: 100%;
+  max-width: none;
+`;
+
+const ModalDialogStyle = styled(Modal.Dialog)`
+  max-width: none!important;
+  width: 100%;
+`;
+
+
 /* Componentes */
-function MoviesSectionCard (props) {
-  return (
-    <Card bgImg={props.bgImg}>
-      <Score score={props.score}>
-        <Start className='fas fa-star'></Start>
-        {props.score}
-      </Score>
-    </Card>
-  );
+class MoviesSectionCard extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      show: false
+    }
+  }
+
+  handleShow = () => {
+    this.setState({show: true})
+  };
+
+  handleClose = () => {
+    this.setState({show: false})
+  };
+
+  render() {
+    return (
+      <div>
+        <Card bgImg={this.props.bgImg} onClick={this.handleShow}>
+          <Score score={this.props.score}>
+            <Start className='fas fa-star'></Start>
+            {this.props.score}
+          </Score>
+        </Card>
+
+        <ModalS show={this.state.show} onHide={this.handleClose} dialogClassName='custom-dialog' >
+          <ModalDialogStyle >
+            <Modal.Header closeButton> <p> Preview </p> </Modal.Header>
+            <Prewiew overview={this.props.overview} title={this.props.title} />
+          </ModalDialogStyle>
+        </ModalS>
+      </div>
+    );
+  }
 }
 
 export default MoviesSectionCard;

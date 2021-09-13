@@ -1,21 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import Login from './containers/Login';
 import './index.css';
+import LoginRouter from './routers/LoginRouter';
 
-
-const ENRUTAMIENTO = false;
-
-
-ReactDOM.render(
-  <React.StrictMode>
-    {
-      (ENRUTAMIENTO
-        ? <App />
-        : <Login />
-      )
-    }
-  </React.StrictMode>,
+ReactDOM.render (
+  <LoginRouter/>,
   document.getElementById('root')
 );

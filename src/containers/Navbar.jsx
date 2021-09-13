@@ -1,7 +1,8 @@
-import NavbarLinks from '../components/NavbarLinks';
-import NavbarSearch from '../components/NavbarSearch';
+import React from 'react';
 import styled from 'styled-components';
 import NavbarLogo from '../components/NavbarLogo';
+import NavbarLinks from '../components/NavbarLinks';
+import NavbarSearch from '../components/NavbarSearch';
 
 /* Estilos */
 const Nav = styled.div`
@@ -11,23 +12,33 @@ const Nav = styled.div`
   padding: 1rem 7rem;
 
   background-color: #000000;
+
+  @media (max-width: 700px){
+    flex-direction: column;
+    margin-bottom: 2rem;
+  }
 `;
 
-
 /* Componentes */
-function Navbar (props) {
-  return (
-    <Nav>
-      <NavbarLogo />
-      <NavbarLinks />
-      <NavbarSearch
-        setInputValue={props.setInputValue}
-        searchMovieByName={props.value}
-        handleClickSearch={props.handleClickSearch}
-        value={props.value}  
-      />
-    </Nav>
-  );
+class Navbar extends React.Component {
+  render () {
+    return (
+      <Nav>
+        <NavbarLogo />
+        <NavbarLinks
+          nameUser={this.props.nameUser}
+          idUser={this.props.idUser}
+          sortMovies={this.props.sortMovies}
+        />
+        <NavbarSearch
+          setInputValue={this.props.setInputValue}
+          searchMovieByName={this.props.value}
+          handleClickSearch={this.props.handleClickSearch}
+          value={this.props.value}  
+        />
+      </Nav>
+    );
+  }
 }
 
 export default Navbar;

@@ -1,8 +1,8 @@
-import md5 from 'md5';
 import axios from 'axios';
 import React from 'react';
 import styled from 'styled-components';
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 /* Estilos */
 const Form = styled.form`
@@ -20,6 +20,7 @@ const Input = styled.input`
   border: none;
   border-bottom: .3rem solid goldenrod;
   color: white;
+  font-size: 2rem;
 
   &::selection {
     background-color: green;
@@ -31,11 +32,15 @@ const Input = styled.input`
   }
 `;
 
+
+const MySwal = withReactContent(Swal);
+
 const SubmitInput = styled(Input)`
   background-color: goldenrod;
   width: 30rem;
   margin: 5rem auto;
   border: .5rem groove goldenrod;
+  cursor: pointer;
 
   &:focus {
     outline: none;
@@ -43,10 +48,8 @@ const SubmitInput = styled(Input)`
   }
 `;
 
-
-
 class LoginsignIn extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       user: '',
@@ -61,26 +64,31 @@ class LoginsignIn extends React.Component {
   }
 
   handleSubmit = event => {
-    /* Si es valido */
-    /* Pasar el nombre del usuario al contexto global */
     event.preventDefault();
-    alert("Submit Form");
     this.singInUser();
   }
 
   singInUser = async () => {
     const URL_HEROKU = 'https://block-master-api.herokuapp.com/users';
-    const PARAMS = `?user=${this.state.user}&password=${md5(this.state.password)}`;
+    const PARAMS = `?user=${this.state.user}&password=${this.state.password}`;
     axios.get(URL_HEROKU + PARAMS)
       .then(response => response.data)
-        .then(response => {
-          console.log((response[0] ? "Bienvenido " + response[0].first_name : "Usuario o Contraseña inválidos"
-          ));
-        })
-        .catch(error => console.error("ERROR" + error));
+      .then(response => {
+        if (response[0]) this.props.handleLoggin(this.state.user, response[0].id);
+        else {
+          MySwal.fire({
+            title: 'Datos incorrectos',            
+            icon: 'error',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Entendido',
+          });
+        }
+      })
+      .catch(error => console.error("ERROR" + error));
   }
 
-  render () {
+  render() {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Input

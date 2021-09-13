@@ -1,3 +1,4 @@
+import React from 'react';
 import LoginRegister from "../components/LoginRegister";
 import LoginsignIn from "../components/LoginSingIn";
 import styled from "styled-components";

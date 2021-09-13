@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
 /* Estilos */
 const InputSearch = styled.input`
   display: block;
@@ -53,14 +52,6 @@ const Div = styled.div`
 
 /* Componentes */
 class NavbarSearch extends React.Component {
-
-  constructor (props) {
-    super(props);
-    
-    /*
-      Al hacer click, toma el valor
-    */
-  }
 
   handleChange = event => {
     this.props.setInputValue(event.target.value);

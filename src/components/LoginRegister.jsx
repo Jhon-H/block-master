@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import md5 from 'md5';
 import {v4 as uuidv4} from 'uuid';
 import styled from 'styled-components';
 
@@ -20,6 +19,7 @@ const Input = styled.input`
   border: none;
   border-bottom: .3rem solid goldenrod;
   color: white;
+  font-size: 2rem;
 
   &::selection {
     background-color: green;
@@ -41,6 +41,8 @@ const SubmitInput = styled(Input)`
     outline: none;
     border-color: transparent;
   }
+
+  cursor: pointer;
 `;
 
 
@@ -53,7 +55,7 @@ class LoginRegister extends React.Component {
       secondName: '',
       lastName: '',
       user: '',
-      password: ''
+      password: '',
     }
   }
 
@@ -80,19 +82,20 @@ class LoginRegister extends React.Component {
     this.setState(resetedState);
   }
 
-  alreadyUserExist = async ()  => {
+  alreadyUserExist = ()  => {
     return false;
   }
 
   registerUser = async () => {
     const URL_HEROKU = 'https://block-master-api.herokuapp.com/users';
     axios.post(URL_HEROKU, {
+      id: uuidv4(),
       firstName: this.state.firstName,
       secondName: this.state.secondName,
       lastName: this.state.lastName,
       user: this.state.user,
-      password: md5(this.state.password),
-      id: uuidv4()
+      password: this.state.password,
+      movies: []
     });
 
     return true;
