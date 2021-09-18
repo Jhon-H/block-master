@@ -23,7 +23,7 @@ const Input = styled.input`
   font-size: 2rem;
 
   &::selection {
-    background-color: green;
+    background-color: gray;
   }
 
   &:focus {
@@ -79,9 +79,9 @@ class LoginsignIn extends React.Component {
           MySwal.fire({
             title: 'Datos incorrectos',            
             icon: 'error',
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Entendido',
+            showCancelButton: false,
+            confirmButtonColor: 'tomato',
+            confirmButtonText: 'Entendido',
           });
         }
       })
@@ -124,26 +124,13 @@ class LoginsignIn extends React.Component {
 export default LoginsignIn;
 
 /*
-- Cambiar entre registrar e ingresar
-- Que se envie la contraseña cifrada (login y register)
-*/
 
-
-/*
-  Que se pase el usuario o el i o algo al contexto global, para poder guardar datos
-  Que si el usuario existe, me redirecicone a la pagina principal
-
-  SUBIR Y ENVIAR
-
+  - Que se envie la contraseña cifrada (login y register)
   Que muestre data cuando presione cards
   Que sirvan los botoens de filtrar, buscar, etc
   ENrutamiento
   Que se pueda guardar ver luego en usuario, que se pueda eliminar esa informacion
 
-  Que el usuario pueda subir peliculas (apareceran de primeras en TODOS, y seun su rango en las demas)
-  Que pueda eliminar, edit, etc pelicuals que subio
   Que se pueda ver trailer de pelicula
-  Design de todo todo todo
-  Responsivo
-  Terminar lo que falte (scroll infinito, pagina 404, no founds results, redireccion)
+  Terminar lo que falte:  no founds results
 */

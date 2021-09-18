@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import LoginRegister from '../components/LoginRegister';
 import LoginsignIn from '../components/LoginSingIn';
-import App from './App';
+import App from '../components/App';
 import Error404 from '../containers/Error404';
 import styled from 'styled-components';
 import LinkLoginRegister from './LinkLoginRegister';

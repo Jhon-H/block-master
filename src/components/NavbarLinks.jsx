@@ -57,9 +57,16 @@ class NavbarLinks extends React.Component {
       activeA: true,
       activeB: false,
       activeC: false,
-      activeD: false
+      activeD: false,
+      currPage: 1,
+      currActive: "activeA"
     }
   }
+
+  shouldComponentUpdate (prevProps, preState) {
+    return (preState.currActive !== this.state.currActive);
+  }
+
 
   pintarLink = name_ => {
     const resetStateVales = {};
@@ -73,18 +80,32 @@ class NavbarLinks extends React.Component {
     this.setState(resetStateVales);
   }
 
-  handleClick = event => {
-    this.pintarLink(event.target.name);
-
-    /* TODO AGREGAR APIS */
+  searchByOrder = (event, page) => {
     const LINKSORTAPIS = {
-      activeA: 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=a4329352bd9a9fb8d7b99ab53da4528f&page=1&language=es',
-      activeB: 'http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=a4329352bd9a9fb8d7b99ab53da4528f&page=1&language=es',
-      activeC: 'http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.asec&api_key=a4329352bd9a9fb8d7b99ab53da4528f&page=1&language=es',
+      activeA: `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=a4329352bd9a9fb8d7b99ab53da4528f&page=${page}&language=es`,
+      activeB: `http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=a4329352bd9a9fb8d7b99ab53da4528f&page=${page}&language=es`,
+      activeC: `http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.asec&api_key=a4329352bd9a9fb8d7b99ab53da4528f&page=${page}&language=es`,
       activeD: `https://block-master-api.herokuapp.com/users/${this.props.idUser}`
     }
 
+    console.log("Buscando : " + event.target.name + " en page: " + page);
     this.props.sortMovies(event.target.name, LINKSORTAPIS[event.target.name]);
+  }
+
+  handleClick = event => {
+    if (this.state.currActive === event.target.name) {
+      this.searchByOrder(event, this.state.currPage + 1);
+      this.setState((state) => ({...state, currPage: state.currPage + 1}));
+      // console.log(this.state.);
+    }else {
+      this.pintarLink(event.target.name);
+      this.searchByOrder(event, 1);
+      this.setState({
+        ...this.state,
+        currPage: 1,
+        currActive: event.target.name
+      });
+    }
   }
 
   render() {
@@ -118,7 +139,7 @@ class NavbarLinks extends React.Component {
           Mis películas
         </A>
 
-        <LinkStyle to={'/crud'}> CRUD </LinkStyle> 
+        <LinkStyle to={'/crud'}> Admin </LinkStyle>
       </Div>
     );
   }
@@ -126,8 +147,3 @@ class NavbarLinks extends React.Component {
 
 
 export default NavbarLinks;
-
-
-/*
- - No funciona el Route, corregir
-*/

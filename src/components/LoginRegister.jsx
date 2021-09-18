@@ -1,7 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
 
 /* Estilos */
 const Form = styled.form`
@@ -22,7 +25,7 @@ const Input = styled.input`
   font-size: 2rem;
 
   &::selection {
-    background-color: green;
+    background-color: gray;
   }
 
   &:focus {
@@ -45,10 +48,12 @@ const SubmitInput = styled(Input)`
   cursor: pointer;
 `;
 
+const MySwal = withReactContent(Swal);
+
 
 /* Componentes */
 class LoginRegister extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       firstName: '',
@@ -65,29 +70,36 @@ class LoginRegister extends React.Component {
     });
   }
 
-  handleSubmit = event => { 
+  handleSubmit = event => {
     event.preventDefault();
     const keys = Object.keys(this.state);
     const resetedState = {};
-   
-    
-    if (this.alreadyUserExist()) {
-      alert("Este usuario está en uso")
-    } else {
-      this.registerUser();
-    }
+    const URL_HEROKU = 'https://block-master-api.herokuapp.com/users';
 
-    /* Nota: no pudemos usar event.target.reset porque es un formaulario controlado */
-    keys.forEach(key => resetedState[key] = '');
-    this.setState(resetedState);
+    axios.get(URL_HEROKU)
+      .then(response => {
+        const exist = response.data.some(user => user.user === this.state.user);
+        if (exist) this.alreadyUserExist();
+        else this.registerUser();
+        console.log(response.data);
+        keys.forEach(key => resetedState[key] = '');
+        this.setState(resetedState);
+      });
   }
 
-  alreadyUserExist = ()  => {
-    return false;
+  alreadyUserExist = () => {
+    MySwal.fire({
+      title: 'Este usuario ya existe',
+      icon: 'error',
+      showCancelButton: false,
+      confirmButtonColor: 'tomato',
+      confirmButtonText: 'Entendido',
+    });
   }
 
   registerUser = async () => {
     const URL_HEROKU = 'https://block-master-api.herokuapp.com/users';
+
     axios.post(URL_HEROKU, {
       id: uuidv4(),
       firstName: this.state.firstName,
@@ -96,12 +108,18 @@ class LoginRegister extends React.Component {
       user: this.state.user,
       password: this.state.password,
       movies: []
-    });
 
-    return true;
+    }).then(response => {
+      MySwal.fire({
+        title: 'Registrado corretamente',
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonText: 'Entendido',
+      });
+    })
   }
 
-  render () {
+  render() {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Input
@@ -160,24 +178,3 @@ class LoginRegister extends React.Component {
 }
 
 export default LoginRegister;
-
-/*TODO: 
-  ! implementar boton de ver password:
-    this.state = {
-      clearPassword: false
-    }
-
-    changeClearPassword = () => {
-      this.setState(state => { clearPassword: !clearPassword });
-    }
-
-    render ...
-      <input
-        type= ${this.state.clearPassword ? "text" : "password"}
-        value.....
-      />
-
-      <button onClick={this.changeClearPassword} >
-
-  *
-*/

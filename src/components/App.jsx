@@ -4,7 +4,6 @@ import Carrousel from '../containers/Carrousel';
 import MoviesSection from '../containers/MoviesSection';
 import axios from 'axios';
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +11,8 @@ class App extends React.Component {
       inputValue: '',
       searchByName: false,
       moviesSort: [],
-      activeD: false
+      activeD: false,
+      currActive: "activeA"
     }
   }
 
@@ -21,10 +21,15 @@ class App extends React.Component {
       axios.get(apiSort)
         .then(response => response.data)
         .then(data => {
-          console.log(data.movies);
+          let ppp = data.movies;
+          if (this.state.currActive === name) {
+            ppp = this.state.moviesSort.concat(ppp);
+          }
+
           this.setState({
-            moviesSort: data.movies,
-            activeD: true
+            moviesSort: ppp,
+            activeD: true,
+            currActive: name
           })
         })
     } else {
@@ -32,10 +37,15 @@ class App extends React.Component {
         .then(response => response.json())
         .then(response => response.results)
         .then(data => {
-          console.log(data);
+          let ppp = data;
+          if (this.state.currActive === name) {
+            ppp = this.state.moviesSort.concat(ppp);
+          }
+
           this.setState({ 
-            moviesSort: data,
-            activeD: false
+            moviesSort: ppp,
+            activeD: false,
+            currActive: name
           })
         })
         .catch(error => console.warn("ERROR" + error));

@@ -64,7 +64,7 @@ class MoviesSection extends React.Component {
     const IMG_PREFIX = 'https://image.tmdb.org/t/p/w500';
     return (
       <Div>
-        <Title> Todas las películas:  </Title>
+        <Title> Películas:  </Title>
         <DivMovies>
           {
             this.state.movies.map(movie =>
