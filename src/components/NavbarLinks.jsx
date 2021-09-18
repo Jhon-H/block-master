@@ -63,8 +63,8 @@ class NavbarLinks extends React.Component {
     }
   }
 
-  shouldComponentUpdate (prevProps, preState) {
-    return (preState.currActive !== this.state.currActive);
+  shouldComponentUpdate (prevProps, prevState) {
+    return (prevState.currActive !== this.state.currActive);
   }
 
 
@@ -95,13 +95,11 @@ class NavbarLinks extends React.Component {
   handleClick = event => {
     if (this.state.currActive === event.target.name) {
       this.searchByOrder(event, this.state.currPage + 1);
-      this.setState((state) => ({...state, currPage: state.currPage + 1}));
-      // console.log(this.state.);
+      this.setState((state) => ({currPage: state.currPage + 1}));
     }else {
       this.pintarLink(event.target.name);
       this.searchByOrder(event, 1);
       this.setState({
-        ...this.state,
         currPage: 1,
         currActive: event.target.name
       });
@@ -139,7 +137,7 @@ class NavbarLinks extends React.Component {
           Mis películas
         </A>
 
-        <LinkStyle to={'/crud'}> Admin </LinkStyle>
+        <LinkStyle to={'/crud'}> CRUD </LinkStyle>
       </Div>
     );
   }
